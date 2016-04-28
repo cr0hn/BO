@@ -43,10 +43,10 @@ def main(info):
 
 		for x in f.read():
 
-			print("[i] Storing char: '%s'" % x)
-
 			# Encode: x -> hex(x) -> bin
 			c = BitArray("0x%s" % binascii.hexlify(x.encode(errors="ignore")).decode())
+
+			print("[i] Storing char: '%s'" % x)
 
 			# Call to get ID for each letter
 			for i, l in enumerate(c.bin, 1):
@@ -58,9 +58,16 @@ def main(info):
 					val = "false"
 
 				print("    |- Storing bit '%s'" % l)
-				response = requests.post("https://api.booleans.io", data=dict(val=val)).text
+				response = requests.post("https://api.booleans.io", data=dict(val=val))
 
-				res = json.loads(response)
+				if response.status_code == 429:
+					print("Waiting 2 minutes for service limitation...")
+
+					time.sleep(120)
+
+					response = requests.post("https://api.booleans.io", data=dict(val=val))
+
+				res = json.loads(response.text)
 
 				# Add to db
 				info_to_db[pos] = res['id']

@@ -46,10 +46,11 @@ def main(info):
 	for key in keylist:
 		info[key] = tmp_info[str(key)]
 
+	print("[i] Starting ... ")
 	bin_text = []
 	for i, (pos, e_id) in enumerate(info.items(), 1):
 
-		print("[i] Reading: '%s'" % e_id)
+		print("    |- Reading: '%s'" % e_id)
 
 		response = requests.get("https://api.booleans.io/%s" % e_id).text
 
@@ -76,7 +77,7 @@ def main(info):
 			print("Waiting 2 minutes for service limitation...")
 			time.sleep(120)
 
-	print("Hidden message: '%s'" % ''.join(results_text))
+	print("\n[i] Hidden message: '%s'" % ''.join(results_text))
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Unhider from booleans.io')
